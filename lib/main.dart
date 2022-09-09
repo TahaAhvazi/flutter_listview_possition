@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:pagin_flutter/blocs/listviewpossitionBloc/listview_possition_bloc.dart';
 
 void main() => runApp(const MainApp());
@@ -9,7 +10,7 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       home: BlocProvider(
         create: (context) => ListviewPossitionBloc(),
         child: const HomePage(),
@@ -35,6 +36,11 @@ class _HomePageState extends State<HomePage> {
       if (_scrollController.position.atEdge) {
         bool isAtTheTop = _scrollController.position.pixels == 0;
         if (isAtTheTop) {
+          showSnackBar(
+              title: "First Items",
+              description: "You reached the top of the list",
+              color: Colors.greenAccent,
+              snackPosition: SnackPosition.TOP);
           print("At the TOP");
           setState(() {
             isAtTheTop == true;
@@ -43,6 +49,12 @@ class _HomePageState extends State<HomePage> {
               .read<ListviewPossitionBloc>()
               .add(OnListViewPossitionDetectedEvent(isAtTheTop));
         } else {
+          showSnackBar(
+            title: "Last Items",
+            description: "You reached the end of the list",
+            color: Colors.redAccent,
+            snackPosition: SnackPosition.BOTTOM,
+          );
           print("At the bottom");
           setState(() {
             isAtTheTop == false;
@@ -82,30 +94,30 @@ class _HomePageState extends State<HomePage> {
               child: CircularProgressIndicator(),
             );
           }
-          if (state is ListViewAtTopState) {
-            return const Center(
-              child: Text(
-                "WE ARE AT THE TOP",
-                style: TextStyle(
-                  color: Colors.brown,
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            );
-          }
-          if (state is ListViewAtBottomState) {
-            return const Center(
-              child: Text(
-                "WE ARE AT THE BOTTOM",
-                style: TextStyle(
-                  color: Color.fromARGB(255, 255, 72, 6),
-                  fontSize: 34,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            );
-          }
+          // if (state is ListViewAtTopState) {
+          //   return const Center(
+          //     child: Text(
+          //       "WE ARE AT THE TOP",
+          //       style: TextStyle(
+          //         color: Colors.brown,
+          //         fontSize: 40,
+          //         fontWeight: FontWeight.bold,
+          //       ),
+          //     ),
+          //   );
+          // }
+          // if (state is ListViewAtBottomState) {
+          //   return const Center(
+          //     child: Text(
+          //       "WE ARE AT THE BOTTOM",
+          //       style: TextStyle(
+          //         color: Color.fromARGB(255, 255, 72, 6),
+          //         fontSize: 34,
+          //         fontWeight: FontWeight.bold,
+          //       ),
+          //     ),
+          //   );
+          // }
           if (state is ListviewPossitionInitial) {
             return Column(
               children: [
@@ -123,8 +135,15 @@ class _HomePageState extends State<HomePage> {
                             SizedBox(
                               height: 100,
                               width: double.infinity,
-                              child:
-                                  Center(child: Text("${index + 1} Container")),
+                              child: Center(
+                                child: Text(
+                                  "${index + 1} Container",
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 30,
+                                  ),
+                                ),
+                              ),
                             ),
                             const Divider(
                               thickness: 5,
@@ -160,5 +179,14 @@ class _HomePageState extends State<HomePage> {
     _scrollController.animateTo(start,
         duration: const Duration(seconds: 1), curve: Curves.easeInCirc);
     // _scrollController.jumpTo(end);
+  }
+
+  showSnackBar(
+      {required String title,
+      description,
+      required Color color,
+      required SnackPosition snackPosition}) {
+    Get.snackbar(title, description,
+        backgroundColor: color, snackPosition: snackPosition);
   }
 }

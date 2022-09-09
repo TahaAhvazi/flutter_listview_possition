@@ -9,16 +9,16 @@ class ListviewPossitionBloc
     extends Bloc<ListviewPossitionEvent, ListviewPossitionState> {
   ListviewPossitionBloc() : super(ListviewPossitionInitial()) {
     on<OnListViewPossitionDetectedEvent>((event, emit) {
-      emit(ListViewAtLoadingState());
+      // emit(ListViewAtLoadingState());
       print(state);
-      if (event.isTop) {
-        emit(ListViewAtTopState());
-        print(state);
-      } else {
-        print("At Bottom");
-        emit(ListViewAtBottomState());
-        print(state);
-      }
+      // if (event.isTop) {
+      //   emit(ListViewAtTopState());
+      //   print(state);
+      // } else {
+      //   print("At Bottom");
+      //   emit(ListViewAtBottomState());
+      //   print(state);
+      // }
     });
   }
 }
